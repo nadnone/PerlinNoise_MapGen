@@ -32,7 +32,8 @@ for w in range(PIXELS[0]):
             repeaty=PIXELS[1],
             base=0
             )
-
+        
+        """
         if val < -0.07:
             image.putpixel((w,h), MER)
         elif val < 0:
@@ -43,6 +44,7 @@ for w in range(PIXELS[0]):
             image.putpixel((w,h), PIERRE)
         elif val < 1.0:
             image.putpixel((w,h), NEIGE)
-
+        """
+        image.putpixel((w,h), (int(val*255), int(val*255), int(val*255)))
 
 image.save(image_path)
