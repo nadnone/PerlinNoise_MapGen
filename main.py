@@ -18,33 +18,50 @@ NEIGE = (194,194,192)
 image_path = "./heighmap.png"
 
 image = Image.new(mode="RGB", size=PIXELS)
+data_map = open("heightmap.heightmap", "w")
 
-
-for w in range(PIXELS[0]):
-    for h in range(PIXELS[1]):
+for x in range(PIXELS[0]):
+    for y in range(PIXELS[1]):
         
         val = noise.pnoise2(
-            w/echelle,
-            h/echelle,
+            x/echelle,
+            y/echelle,
             octaves=octaves,
             persistence=persistance,
             repeatx=PIXELS[0],
             repeaty=PIXELS[1],
             base=0
             )
-        
-        """
+
         if val < -0.07:
-            image.putpixel((w,h), MER)
-        elif val < 0:
-            image.putpixel((w,h), SABLE)
+            image.putpixel((x,y), MER)
+        elif val < 0.0:
+            image.putpixel((x,y), SABLE)
         elif val < 0.25:
-            image.putpixel((w,h), HERBE)
+            image.putpixel((x,y), HERBE)
         elif val < 0.5:
-            image.putpixel((w,h), PIERRE)
+            image.putpixel((x,y), PIERRE)
         elif val < 1.0:
-            image.putpixel((w,h), NEIGE)
-        """
-        image.putpixel((w,h), (int(val*255), int(val*255), int(val*255)))
+            image.putpixel((x,y), NEIGE)
+        
+        #image.putpixel((w,h), (int(val*255), int(val*255), int(val*255)))
+
+        # formation d'un plan triangulé
+        
+        x_c = x/512.0
+        y_c = y/512.0
+
+        # triangle 1
+        data_map.write(f"{x_c-1} {val} {y_c+1}\n")
+        data_map.write(f"{x_c+1} {val} {y_c+1}\n")
+        data_map.write(f"{x_c+1} {val} {y_c-1}\n")
+
+        # triangle 2
+        data_map.write(f"{x_c-1} {val} {y_c+1}\n")
+        data_map.write(f"{x_c-1} {val} {y_c-1}\n")
+        data_map.write(f"{x_c+1} {val} {y_c-1}\n")
+
+        # TODO A REVOIR !
 
 image.save(image_path)
+data_map.close()
