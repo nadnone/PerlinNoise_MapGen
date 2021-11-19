@@ -25,7 +25,7 @@ gray_scale_path = "./grayscale_heightmap.png"
 image = Image.new(mode="RGB", size=PIXELS)
 #gray_scale = Image.new(mode="RGB", size=PIXELS)
 
-#data_map = open("heightmap.heightmap", "w")
+data_map = open("heightmap.map_triangulated", "w")
 
 world = np.zeros(PIXELS)
 
@@ -56,45 +56,98 @@ for x in range(PIXELS[0]):
         elif val < 1.0:
             image.putpixel((x,y), NEIGE)
         
-        #gray_scale.putpixel((x,y), (int(val*255), int(val*255), int(val*255)))
+        #gray_scale.putpixel((x,y), (int(val*255), int(val*255), int(val*255)))     
+
+        # formation d'un carré triangulé
+
+        o = {
+            "x": x/2,
+            "z": y/2
+        }
+        
+        position_carre = [
+            [
+                o["x"]/2,
+                0,
+                o["z"]*2
+            ],
+            [
+                o["x"],
+                0,
+                o["z"]*2
+            ],
+            [
+                o["x"]*2,
+                0,
+                o["z"]*2
+            ],
+            [
+                o["x"]*2,
+                0,
+                o["z"]
+            ],
+            [
+                o["x"]*2,
+                0,
+                o["z"]/2
+            ],
+            [
+                o["x"],
+                0,
+                o["z"]/2
+            ],
+            [
+                o["x"]/2,
+                0,
+                o["z"]/2
+            ],
+            [
+                o["x"]/2,
+                0,
+                o["z"]
+            ],
+            [
+                o["x"],
+                val* 100,
+                o["z"]
+            ]
+
+        ]
+
+        
+        # on divise en 4
+        for i in range(0, 8, 2):
+    
+            data_map.write(f"{position_carre[i][0]} {position_carre[i][1]} {position_carre[i][2]} C {val}\n")
+            data_map.write(f"{position_carre[8][0]} {position_carre[8][1]} {position_carre[8][2]} C {val}\n")
+            data_map.write(f"{position_carre[i+1][0]} {position_carre[i+1][1]} {position_carre[i+1][2]} C {val}\n")
+
+            # triangle 1
+            #data_map.write(f"{x + halfx} {world[x][y]} {y + halfy}\n") # pt 1
+            #data_map.write(f"{x + halfx} {world[x][y]} {y - halfy}\n") # pt 2
+            #data_map.write(f"{x - halfx} {world[x][y]} {y - halfy}\n") # pt 3
+
+            # triangle 2
+            #data_map.write(f"{x + halfx} {world[x][y]} {y + halfy}\n") # pt 1
+            #data_map.write(f"{x - halfx} {world[x][y]} {y - halfy}\n") # pt 3
+            #data_map.write(f"{x - halfx} {world[x][y]} {y + halfy}\n") # pt 4
+
+        # on fait le dernier triangle
+        
 
 
-lin_x = np.linspace(-1, 1, PIXELS[0], endpoint=False)
-lin_y = np.linspace(-1, 1, PIXELS[1], endpoint=False)
-c_x, c_y = np.meshgrid(lin_x, lin_y)
-
-
-
-
-
-"""
-
-for i in range(0, len(c_x)):
-    for j in range(0, len(c_x)):
-
-        # formation d'un plan triangulé
-
-        # triangle 1
-        data_map.write(f"{c_y[i][j]} {c_y[i][j]} {world[i][j]}\n")
-        data_map.write(f"{x} {val} {y}\n")
-        data_map.write(f"{x} {val} {y}\n")
-
-        # triangle 2
-        data_map.write(f"{x} {val} {y}\n")
-        data_map.write(f"{x} {val} {y}\n")
-        data_map.write(f"{x} {val} {y}\n")
-"""
-
-
+ligne_x = np.linspace(-1, 1, PIXELS[0], endpoint=False)
+ligne_y = np.linspace(-1, 1, PIXELS[1], endpoint=False)
+matx,maty = np.meshgrid(ligne_x, ligne_y)
 
 image.save(image_path)
 #gray_scale.save(gray_scale_path)
 
-#data_map.close()
+data_map.close()
 
 # affichage de la map
 
 fig = matplotlib.pyplot.figure()
 ax = fig.add_subplot(111, projection="3d")
-ax.plot_surface(c_x,c_y, world, cmap='terrain')
+ax.plot_surface(matx,maty, world, cmap='terrain')
 matplotlib.pyplot.show()
