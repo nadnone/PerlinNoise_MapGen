@@ -2,3 +2,5 @@
 heightmap.heightmap
 *.png
 heightmap.map_triangulated
+*.indices
+*.data_map
