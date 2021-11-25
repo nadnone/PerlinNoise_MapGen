@@ -11,7 +11,7 @@ PIXELS = (512, 512)
 
 echelle = 100.0
 octaves = 1
-details = 1.0
+details = 0.0
 persistance = 1.4
 
 MER = (36,128,214)
@@ -26,8 +26,6 @@ gray_scale_path = "./grayscale_heightmap.png"
 image = Image.new(mode="RGBA", size=PIXELS)
 gray_scale = Image.new(mode="RGBA", size=PIXELS)
 
-data_map_data = open("world/heightmap_verticecs.data_map", "w")
-#data_map_indices = open("world/heightmap_verticecs.indices", "w")
 
 world = np.zeros(PIXELS)
 
